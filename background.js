@@ -1,6 +1,6 @@
 let checked = false
 
-// 창 생성성
+// 창 생성
 function createWindow() {
     const url = 'https://edu.ssafy.com/edu/main/index.do';
     const now = new Date();
@@ -35,7 +35,7 @@ chrome.alarms.onAlarm.addListener(() => {
     createWindow();
 });
 
-// 30초마다 알람람
+// 30초마다 알람
 chrome.alarms.create({periodInMinutes: 0.5});
 
 createWindow();
