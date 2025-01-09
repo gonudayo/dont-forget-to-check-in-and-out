@@ -1,0 +1,11 @@
+{
+    "name": "Don't forget to check in and out",
+    "description": "Opens SSAFY EDU when you have to check in or out",
+    "homepage_url": "https://github.com/gonudayo/dont-forget-to-check-in-and-out",
+    "version": "0.1.0",
+    "manifest_version": 3,
+    "background": {
+      "service_worker": "background.js"
+    },
+    "permissions": [ "alarms", "background", "tabs" ]
+  }
