@@ -1,11 +1,11 @@
 {
     "name": "아맞다출첵",
-    "description": "입실, 퇴실 체크를 해야 하는 시간에 자동으로 싸피 출석체크 페이지를 띄워 줍니다.",
+    "description": "입실, 퇴실 체크를 해야 하는 시간에 자동으로 싸피 학사사이트를 띄워 줍니다.",
     "homepage_url": "https://github.com/gonudayo/dont-forget-to-check-in-and-out",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "manifest_version": 3,
     "background": {
       "service_worker": "background.js"
     },
-    "permissions": [ "alarms", "background" ]
+    "permissions": [ "alarms", "background", "storage" ]
   }
