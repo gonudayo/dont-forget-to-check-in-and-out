@@ -15,6 +15,35 @@ cal[9 * 31 + 8] = 1;
 cal[9 * 31 + 9] = 1;
 cal[11 * 31 + 25] = 1;
 
+const CHECKIN_HOUR = 8;
+const CHECKIN_MINUTES = 29;
+const CHECKOUT_HOUR = 17;
+const CHECKOUT_MINUTES = 59;
+
+// 시간확인
+function checkTime() {
+  const now = new Date();
+  const hh = now.getHours();
+  const mm = now.getMinutes();
+  const ss = now.getSeconds();
+
+  if (
+    (hh === CHECKIN_HOUR && CHECKIN_MINUTES === mm && 59 === ss) ||
+    (hh === CHECKIN_HOUR && CHECKIN_MINUTES < mm) ||
+    (hh === CHECKOUT_HOUR && CHECKOUT_MINUTES === mm && 59 === ss) ||
+    (hh === CHECKOUT_HOUR + 1 && mm <= 30)
+  ) {
+    return 0;
+  } else if (
+    (hh === CHECKIN_HOUR && mm === CHECKIN_MINUTES) ||
+    (hh === CHECKOUT_HOUR && CHECKOUT_MINUTES === mm)
+  ) {
+    return 59 - ss;
+  }
+
+  return -1;
+}
+
 // 창 생성
 function createWindow() {
   const now = new Date();
@@ -25,13 +54,11 @@ function createWindow() {
   if (cal[now.getMonth() * 31 + now.getDate()] === 1) {
     return;
   }
-  const hh = now.getHours();
-  const mm = now.getMinutes();
   const url = "https://edu.ssafy.com/edu/main/index.do";
 
   chrome.storage.sync.get(["checked"], (result) => {
     let checked = result.checked || false;
-    if ((hh === 8 && 30 <= mm) || (hh === 18 && mm <= 30)) {
+    if (checkTime() === 0) {
       if (checked === false) {
         chrome.windows.create({
           url: url,
@@ -44,6 +71,7 @@ function createWindow() {
       checked = false;
     }
     chrome.storage.sync.set({ checked: checked });
+    console.log(checked);
   });
 }
 
@@ -53,7 +81,15 @@ chrome.alarms.onAlarm.addListener(() => {
 });
 
 // 30초마다 알람
-chrome.alarms.create({ periodInMinutes: 0.5 });
+function alarm() {
+  chrome.alarms.create({ periodInMinutes: 0.5 });
+}
 
-// 최초 실행시
-createWindow();
+// 서비스워커 실행시, 알람 발생 전, 시간 확인 후 페이지 띄우기
+const initTIme = checkTime();
+if (initTIme > -1) {
+  setTimeout(createWindow, initTIme * 1000);
+}
+
+// 알람 시작 지점 설정
+setTimeout(alarm, (59 - new Date().getSeconds()) * 1000);
